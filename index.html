@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olanrewaju Olamide - Full-Stack Web Developer</title>
+
+
+<meta name="title" content="Olanrewaju Olamide | Fullstack Developer & Laravel Engineer">
+<meta name="description" content="I'm Olanrewaju Olamide, a fullstack developer. I build scalable SaaS platforms, school portals, and business solutions with clean, modern user experiences.">
+
+<!-- SEO Keywords -->
+<meta name="keywords" content="Olanrewaju Olamide, Olamzy, Laravel Developer,Web Developer, Web Designer, Website, PHP Developer, Fullstack Developer, API Developer, SaaS Developer, School Portal Developer, Nigeria Developer, Backend Developer, PrepStack, Billently">
+<meta name="author" content="Olanrewaju Olamide">
+
+<!-- Open Graph / Facebook / LinkedIn -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://portfolio.olamzyweb.com.ng/">
+<meta property="og:title" content="Olanrewaju Olamide | Fullstack Developer & Laravel Engineer">
+<meta property="og:description" content="I’m Olanrewaju Olamide, a fullstack developer building robust APIs, SaaS systems, and school management solutions.">
+<meta property="og:image" content="/images/avatar.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://portfolio.olamzyweb.com.ng/">
+<meta name="twitter:title" content="Olanrewaju Olamide | Fullstack Developer & Laravel Engineer">
+<meta name="twitter:description" content="I’m Olanrewaju Olamide, a fullstack developer passionate about building scalable SaaS platforms and business tools.">
+<meta name="twitter:image" content="https://portfolio.olamzyweb.com.ng/images/avatar.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="/images/avatar.png">
+
+
+
+
+
+
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                colors: {
+        primary: {
+            50:  '#f9fafb',   // near-white (text on dark backgrounds)
+            100: '#f1f2f3',   // soft white-gray
+            200: '#d1d5db',   // light metallic gray
+            300: '#9ca3af',   // neutral gray (for borders, text)
+            400: '#6b7280',   // cool gray
+            500: '#4b5563',   // mid gray (used for subtle accents)
+            600: '#1e293b',   // deep gray-blue (used by SpaceX UI)
+            700: '#111827',   // blackish-gray (base bg)
+            800: '#0b0f17',   // space black (hero backgrounds)
+            900: '#05070b',   // pure deep black (footer or overlays)
+                }
+                },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+  <!-- Floating Glassy Icon Navbar -->
+<nav class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 dark:bg-gray-800/30 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl px-6 py-3 flex items-center justify-between space-x-6 z-50">
+   <a href="#home" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+    <i class="fas fa-home text-xl"></i>
+  </a>
+  <a href="https://x.com/olamzyweb" target="_blank" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="17" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"></path></svg>
+  </a>
+  <a href="OLANREWAJU OLAMIDE RESUME.pdf" download class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+    <i class="fas fa-folder-open text-xl"></i>
+  </a>
+  <a href="https://github.com/olamzyweb" target="_blank" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+    <i class="fab fa-github text-xl"></i>
+  </a>
+
+  <!-- Theme Toggle Button -->
+  <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700/40 text-gray-900 dark:text-white hover:scale-110 transition">
+    <i class="fas fa-moon dark:hidden"></i>
+    <i class="fas fa-sun hidden dark:block"></i>
+  </button>
+
+  <a href="blog" class="px-4 py-1 bg-black hover:bg-gray-600 text-white rounded-full text-sm font-medium shadow-md transition">
+    Blog
+  </a>
+</nav>
+
+    <!-- Hero Section -->
+    <header class="min-h-screen flex items-center pt-16 pb-20 relative overflow-hidden">
+        <!-- Animated background particles -->
+        <div id="particles-container" class="absolute inset-0 z-0"></div>
+        
+        <div class="container mx-auto px-4 z-10">
+            
+            <div class="max-w-3xl mx-auto text-center">
+                 <div class="w-44 h-44 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
+                            <!-- Placeholder for profile image -->
+                             <img src="images/avatar.png" alt="Olanrewaju olamide">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-user text-6xl text-gray-400"></i>
+                            </div>
+                        </div>
+                <h3 class="text-xl md:text-2xl mb-4">Hello I'm</h3>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    <span class="text-primary-600 dark:text-primary-400">I'm Olamide</span>
+                    <div class="typing-container mt-2">
+                        <span class="typing-text">a Tech Enthusiast</span>
+                    </div>
+                </h1>
+                
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-10">
+                    I build robust, scalable web applications with Laravel, PHP, and modern JavaScript
+                </p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#contact" class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition shadow-md">
+                       Hire Me
+                    </a>
+                    <!-- Social CTA Buttons Start -->
+                    <div class="flex gap-3 justify-center items-center mt-2 sm:mt-0">
+                        <a href="https://www.linkedin.com/in/website-developer-website-design-create-website-olanrewaju-olamide-olamzyweb/" target="_blank" rel="noopener" aria-label="LinkedIn"
+                           class="w-11 h-11 flex items-center justify-center rounded-full bg-primary-100 hover:bg-primary-600 hover:text-white dark:bg-primary-900/30 dark:hover:bg-primary-500 text-primary-600 dark:text-primary-300 shadow transition duration-200">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="https://x.com/olamzyweb" target="_blank" rel="noopener" aria-label="Twitter/X"
+                           class="w-11 h-11 flex items-center justify-center rounded-full bg-primary-100 hover:bg-primary-600 hover:text-white dark:bg-primary-900/30 dark:hover:bg-primary-500 text-primary-600 dark:text-primary-300 shadow transition duration-200">
+                           <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="17" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"></path></svg>
+                        </a>
+                        <a href="https://instagram.com/olamzyweb" target="_blank" rel="noopener" aria-label="Instagram"
+                           class="w-11 h-11 flex items-center justify-center rounded-full bg-primary-100 hover:bg-primary-600 hover:text-white dark:bg-primary-900/30 dark:hover:bg-primary-500 text-primary-600 dark:text-primary-300 shadow transition duration-200">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="https://wa.me/2348188435281" target="_blank" rel="noopener" aria-label="WhatsApp"
+                           class="w-11 h-11 flex items-center justify-center rounded-full bg-primary-100 hover:bg-primary-500 hover:text-white dark:bg-primary-900/30 dark:hover:bg-primary-600 text-primary-600 dark:text-primary-300 shadow transition duration-200">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </a>
+                    </div>
+                    <!-- Social CTA Buttons End -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about">
+                <i class="fas fa-chevron-down text-2xl text-gray-400"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50 dark:bg-gray-800 section animate-fadein">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-16">About Me</h2>
+            
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="w-full md:w-1/3 flex justify-center">
+                    <div class="relative w-64 h-64">
+                        <div class="absolute inset-0 bg-primary-200 dark:bg-primary-900 rounded-full -z-10 mt-4 ml-4"></div>
+                        <div class="w-64 h-64 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
+                            <!-- Placeholder for profile image -->
+                             <img src="images/img1.jpeg" alt="Olanrewaju olamide">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-user text-6xl text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-2/3">
+                    <p class="text-lg mb-6">
+                        Hello! I'm <span class="font-semibold text-primary-600 dark:text-primary-400">Olanrewaju Olamide</span>, an 18-year-old Nigerian software developer with 3.5+ years of experience in backend and fullstack development. I specialize in building robust APIs, SaaS platforms, and custom management systems, with growing expertise in DevOps for efficient deployment and scaling.
+                    </p>
+                    
+                    <p class="text-md mb-6">
+                       I’m the founder of <span class="font-semibold text-primary-600 dark:text-primary-400">PrepStack</span>, an application that provides students access to verified past questions for download, and <span class="font-semibold text-primary-600 dark:text-primary-400">Billently</span>, an invoice generator app designed to help freelancers and small business owners manage their finances with ease and professionalism.
+                    </p>
+                    
+                    <p class="text-md">
+                       As a self-taught developer, I’ve built and deployed projects across multiple industries, including education, fintech, and business automation, with a strong focus on building scalable and secure backend systems.
+
+Beyond code, I’m passionate about learning, mentoring, and simplifying complex ideas through intuitive digital solutions that make life and business smoother for everyone.
+                    </p>
+                </div>
+            </div>
+
+
+
+            <div class="scroll-container my-10">
+  <div class="scrolling-wrapper">
+
+    <!-- Skill Cards -->
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-laravel text-3xl text-red-500 mb-2"></i>
+      <p>Laravel</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-php text-3xl text-purple-500 mb-2"></i>
+      <p>PHP</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fas fa-database text-3xl text-blue-500 mb-2"></i>
+      <p>API Development</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-js-square text-3xl text-yellow-500 mb-2"></i>
+      <p>JavaScript</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-html5 text-3xl text-orange-500 mb-2"></i>
+      <p>HTML</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-css3-alt text-3xl text-blue-400 mb-2"></i>
+      <p>CSS</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-github text-3xl text-gray-600 mb-2"></i>
+      <p>GitHub</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fas fa-cloud text-3xl text-indigo-500 mb-2"></i>
+      <p>Cloud Hosting</p>
+    </div>
+
+    <!-- Duplicate for seamless loop -->
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-laravel text-3xl text-red-500 mb-2"></i>
+      <p>Laravel</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-php text-3xl text-purple-500 mb-2"></i>
+      <p>PHP</p>
+    </div>
+     <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fas fa-database text-3xl text-blue-500 mb-2"></i>
+      <p>API Development</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-js-square text-3xl text-yellow-500 mb-2"></i>
+      <p>JavaScript</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-html5 text-3xl text-orange-500 mb-2"></i>
+      <p>HTML</p>
+    </div>
+
+    <div class="skill-card text-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+      <i class="fab fa-css3-alt text-3xl text-blue-400 mb-2"></i>
+      <p>CSS</p>
+    </div>
+
+  </div>
+</div>
+            
+    
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 section animate-fadein">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">My Projects</h2>
+           
+             <p class="text-center mt-4 text-gray-600 max-w-2xl mx-auto text-base">
+                   A collection of projects I've designed, developed, and deployed recently.
+    </p>
+  <p class="text-center text-gray-400 dark:text-gray-400 max-w-2xl mx-auto mb-16 text-sm">
+           Crafted with precision, powered by clean code, and built for performance.
+            </p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project 1 -->
+ <div class="project-card bg-white px-6 py-8 dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                        <!-- <i class="fas fa-book-open text-5xl text-gray-400"></i> -->
+                         <img src="images/prepstack.png" class="rounded-md" alt="prepstack">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">PrepStack</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Educational platform for past question downloads and exam preparation</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">PHP</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">JavaScript</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Bootstrap</span>
+                        </div>
+                        <a href="https://prepstack.olamzyweb.com.ng" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+
+
+
+                
+                <!-- Project 2 -->
+               
+                
+                <div class="project-card bg-white px-6 py-8 dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 flex rounded-md items-center justify-center">
+                        <!-- <i class="fas fa-graduation-cap text-5xl text-gray-400"></i> -->
+                         <img src="images/heandshe.png" class="rounded-md" alt="heandshe academy">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">He&She academy</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">A modern, responsive website for He & She Academy, showcasing their beauty training programs and services with an elegant, user-friendly design</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Laravel</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Sanctum</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">MySQL</span>
+                        </div>
+                        <a href="https://heandsheacademy.com" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+                <!-- Project 3 -->
+                <div class="project-card bg-white px-6 py-8  dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                        <!-- <i class="fas fa-truck text-5xl text-gray-400"></i> -->
+                         <img src="images/sulyart.png" class="rounded-md" alt="sulyart">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Sulyart</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">A creative and visually engaging website for Sulyart, designed to showcase art, crafts, and unique handmade creations.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Laravel</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">WhatsApp API</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Google Maps</span>
+                        </div>
+                        <a href="https://sulyart.com.ng" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+                
+                <!-- Project 4 -->
+                <div class="project-card bg-white px-6 py-8  dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                        <!-- <i class="fas fa-university text-5xl text-gray-400"></i> -->
+                         <img src="images/billently.png" class="rounded-md" alt="billently">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Billently</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Modern invoice generation website with client management and automated PDF receipts.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">React</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Tailwind CSS</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Chart.js</span>
+                        </div>
+                        <a href="https://billently.vercel.app" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+                
+
+
+
+
+
+                
+                <!-- Project 5 -->
+                <div class="project-card bg-white px-6 py-8  dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                        <!-- <i class="fas fa-store text-5xl text-gray-400"></i> -->
+                            <img src="images/bridgeline.png" class="rounded-md" alt="bridgeline">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Bridgeline</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">Corporate website for Bridgeline, designed to showcase services and build a strong professional online presence</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">PHP</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">MySQL</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Stripe API</span>
+                        </div>
+                        <a href="https://bridgelinelending.com" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="project-card bg-white px-6 py-8  dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center">
+                        <!-- <i class="fas fa-newspaper text-5xl text-gray-400"></i> -->
+                         <img src="images/streetsavvy.png" class="rounded-md" alt="streetsavvy">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">StreetSavvy</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">E-commerce website for Street Savvy, a modern clothing brand with stylish product displays and seamless shopping experience.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">PHP</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">JavaScript</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">MySQL</span>
+                        </div>
+                        <a href="https://streetsavvy.com.ng" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+
+                <div class="project-card bg-white px-6 py-8 dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 flex rounded-md items-center justify-center">
+                        <!-- <i class="fas fa-graduation-cap text-5xl text-gray-400"></i> -->
+                         <img src="images/amtbiz.png" class="rounded-md" alt="amtbiz">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">AmtBiz</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">A full-stack e-commerce web application with product listings, cart, and secure checkout functionality.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Laravel</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Sanctum</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">MySQL</span>
+                        </div>
+                        <a href="https://amtbiz.com" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+<!-- project 8 -->
+                 <div class="project-card bg-white px-6 py-8 dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+                    <div class="h-48 bg-gray-200 dark:bg-gray-700 flex rounded-md items-center justify-center">
+                        <!-- <i class="fas fa-graduation-cap text-5xl text-gray-400"></i> -->
+                         <img src="images/advicewithmide.png" class="rounded-md" alt="advicewithmide">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Advicewithmide</h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">A personal counseling website designed for a therapist to offer guidance, resources, and one-on-one advice.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Laravel</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">Sanctum</span>
+                            <span class="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200 text-sm rounded-full">MySQL</span>
+                        </div>
+                        <a href="https://portfolio.olamzyweb.com.ng/advicewithmide" class="text-primary-600 dark:text-primary-400 font-medium hover:underline">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50 dark:bg-gray-800 section animate-fadein">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Services I Offer</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-16">
+                I provide freelance services to help bring your digital ideas to life or solve existing technical challenges.
+            </p>
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-laptop-code text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">Custom Web Application Development</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>Full-stack solutions using Laravel &amp; PHP</li>
+                        <li>API design &amp; integration</li>
+                        <li>Secure, scalable backend systems</li>
+                    </ul>
+                </div>
+                <!-- Card 2 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-school text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">School Portal &amp; Management Systems</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>SaaS school portals</li>
+                        <li>Role-based student/teacher dashboards</li>
+                        <li>Result &amp; fee management</li>
+                    </ul>
+                </div>
+                <!-- Card 3 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-globe text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">Website Development (Business &amp; Personal)</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>Landing pages &amp; portfolio sites</li>
+                        <li>Corporate and business websites</li>
+                        <li>Responsive, SEO-optimized design</li>
+                    </ul>
+                </div>
+                <!-- Card 4 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-code text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">Frontend Development</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>Modern, responsive UIs with HTML, CSS, JavaScript, Tailwind, Bootstrap</li>
+                        <li>Pixel-perfect Figma to HTML conversions</li>
+                    </ul>
+                </div>
+                <!-- Card 5 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-shopping-cart text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">E-Commerce Solutions</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>Custom online stores</li>
+                        <li>Product catalog, checkout &amp; order tracking</li>
+                        <li>Payment gateway integration</li>
+                    </ul>
+                </div>
+                <!-- Card 6 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-plug text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">API Development &amp; Integration</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>RESTful APIs for mobile/web apps</li>
+                        <li>Third-party service integrations</li>
+                    </ul>
+                </div>
+                <!-- Card 7 -->
+                <div class="service-card bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6 flex flex-col items-start transform transition duration-500 opacity-0 translate-y-8">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 mb-4">
+                        <i class="fas fa-tools text-primary-600 dark:text-primary-400 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 text-primary-700 dark:text-primary-300">Bug Fixing &amp; Maintenance</h3>
+                    <ul class="list-disc list-inside text-gray-700 dark:text-gray-200 text-sm space-y-1 pl-2">
+                        <li>Laravel/PHP debugging</li>
+                        <li>Performance optimization</li>
+                        <li>Continuous updates &amp; support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <style>
+            /* Add fade/slide-in animation for service cards */
+            .service-card.visible {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        </style>
+       
+    </section>
+
+    <!-- Resume Section -->
+   
+<section class="relative py-20 bg-gray-400 dark:bg-gray-900">
+  <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-16">
+    Work Experience
+  </h2>
+
+  <div class="relative max-w-5xl mx-auto">
+    <!-- Vertical line in the center -->
+    <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-white/20"></div>
+
+    <div class="space-y-16 relative">
+      <!-- Item 1 (Left) -->
+      <div class="flex justify-start">
+        <div class="w-1/2 pr-5 pl-2 flex justify-end">
+          <div class="glass-card w-80 p-4 rounded-xl text-white shadow-lg">
+            <h3 class="text-l font-semibold">FullStack Developer</h3>
+            <p class="text-sm text-gray-300">Billently • 2025 - Present</p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="w-4 h-4 bg-white rounded-full border-2 border-gray-900 absolute left-1/2 transform -translate-x-1/2 top-6"></div>
+        </div>
+        <div class="w-1/2"></div>
+      </div>
+
+      <!-- Item 2 (Right) -->
+      <div class="flex justify-end">
+        <div class="w-1/2"></div>
+        <div class="relative">
+          <div class="w-4 h-4 bg-black rounded-full border-2 border-white-900 absolute left-1/2 transform -translate-x-1/2 top-6"></div>
+        </div>
+        <div class="w-1/2 pl-5 pr-2 flex justify-start">
+          <div class="glass-card w-80 p-4 rounded-xl text-white shadow-lg">
+            <h3 class="text-l font-semibold">Fullstack Developer</h3>
+            <p class="text-sm text-gray-300">PrepStack • 2024 - present</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 (Left) -->
+      <div class="flex justify-start">
+        <div class="w-1/2 pr-5 pl-2 flex justify-end">
+          <div class="glass-card w-60 p-4 rounded-xl text-white shadow-lg">
+            <h3 class="text-l font-semibold">Frontend Engineer</h3>
+            <p class="text-sm text-gray-300">He&She Beauty Academy • 2023</p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="w-4 h-4 bg-white rounded-full border-2 border-gray-900 absolute left-1/2 transform -translate-x-1/2 top-6"></div>
+        </div>
+        <div class="w-1/2"></div>
+      </div>
+
+      <!-- Item 4 (Right) -->
+      <div class="flex justify-end">
+        <div class="w-1/2"></div>
+        <div class="relative">
+          <div class="w-4 h-4 bg-black rounded-full border-2 border-white-900 absolute left-1/2 transform -translate-x-1/2 top-6"></div>
+        </div>
+        <div class="w-1/2 pl-5 pr-2 flex justify-start">
+          <div class="glass-card w-80 p-4 rounded-xl text-white shadow-lg">
+            <h3 class="text-l font-semibold">Backend Developer</h3>
+            <p class="text-sm text-gray-300">OLAMZYWEB •  2022</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50 dark:bg-gray-800 section animate-fadein">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Get In Touch</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-16">
+                Have a project in mind or need technical assistance? Feel free to reach out!
+            </p>
+            
+            <div class="flex flex-col lg:flex-row gap-12 max-w-5xl mx-auto">
+                <div class="lg:w-1/2">
+                    <form class="space-y-6" name="contact" action="https://formspree.io/f/xanpbpyv" method="POST">
+                        <div>
+                            <label for="name" class="block mb-2 font-medium">Your Name</label>
+                            <input type="text" name="name" id="name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="John Doe">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block mb-2 font-medium">Email Address</label>
+                            <input type="email" name="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="john@example.com">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block mb-2 font-medium">Your Message</label>
+                            <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700" placeholder="Hello, I would like to..."></textarea>
+                        </div>
+                        
+                        <button type="submit" name="submit" class="w-full px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition shadow-md">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-sm">
+                        <h3 class="text-xl font-semibold mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-envelope text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Email</h4>
+                                    <a href="mailto:horlameedayolanrewaju@gmail.com" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">horlameedayolanrewaju@gmail.com</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fab fa-whatsapp text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">WhatsApp</h4>
+                                    <a href="https://wa.me/2348188435281" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">+234 818 843 5281</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fab fa-github text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">GitHub</h4>
+                                    <a href="https://github.com/olamzyweb" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">github.com/olamzyweb</a>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                                    <i class="fas fa-globe text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Portfolio</h4>
+                                    <a href="https://portfolio.olamzyweb.com.ng" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">portfolio.olamzyweb.com.ng</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
+                            <h4 class="font-medium mb-4">Connect with me</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://www.linkedin.com/in/website-developer-website-design-create-website-olanrewaju-olamide-olamzyweb/" class="w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+                                    <i class="fab fa-linkedin-in text-gray-600 dark:text-gray-300"></i>
+                                </a>
+                                <a href="https://x.com/olamzyweb" class="w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+                                   <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="17" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"></path></svg>
+                                </a>
+                                <a href="https://instagram.com/olamzyweb" class="w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
+                                    <i class="fab fa-instagram text-gray-600 dark:text-gray-300"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-100 dark:bg-gray-900 text-center">
+        <div class="container mx-auto px-4">
+            <p class="text-gray-600 dark:text-gray-400">© 2025 Olanrewaju Olamide. All rights reserved.</p>
+        </div>
+    </footer>
+
+
+     <script src="script/script.js"></script>
+</body>
+</html>

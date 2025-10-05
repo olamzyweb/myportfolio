@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Olanrewaju Olamide</title>
+    <meta name="description" content="Tech insights, tutorials, and thoughts from a fullstack developer">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50:  '#f9fafb',
+                            100: '#f1f2f3',
+                            200: '#d1d5db',
+                            300: '#9ca3af',
+                            400: '#6b7280',
+                            500: '#4b5563',
+                            600: '#1e293b',
+                            700: '#111827',
+                            800: '#0b0f17',
+                            900: '#05070b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+    
+    <!-- Floating Glassy Icon Navbar -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 dark:bg-gray-800/30 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl px-6 py-3 flex items-center justify-between space-x-6 z-50">
+        <a href="../index.html" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+            <i class="fas fa-home text-xl"></i>
+        </a>
+        <a href="https://x.com/olamzyweb" target="_blank" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="17" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"></path></svg>
+        </a>
+        <a href="https://github.com/olamzyweb" target="_blank" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110">
+            <i class="fab fa-github text-xl"></i>
+        </a>
+        <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700/40 text-gray-900 dark:text-white hover:scale-110 transition">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+        </button>
+        <a href="../index.html" class="px-4 py-1 bg-black hover:bg-gray-600 text-white rounded-full text-sm font-medium shadow-md transition">
+            Portfolio
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="min-h-[60vh] flex items-center pt-24 pb-16 relative overflow-hidden">
+        <div id="particles-container" class="absolute inset-0 z-0"></div>
+        
+        <div class="container mx-auto px-4 z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="text-primary-600 dark:text-primary-400">My</span> Blog
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                    Insights, tutorials, and thoughts on web development, Laravel, and modern tech
+                </p>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-2xl text-gray-400"></i>
+        </div>
+    </header>
+
+    <!-- Categories Filter -->
+    <section class="py-8 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="category-badge px-5 py-2 bg-primary-600 text-white rounded-full text-sm font-medium shadow-md" data-category="all">
+                    All Posts
+                </button>
+                <button class="category-badge px-5 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium shadow-sm hover:shadow-md" data-category="laravel">
+                    Laravel
+                </button>
+                <button class="category-badge px-5 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium shadow-sm hover:shadow-md" data-category="javascript">
+                    JavaScript
+                </button>
+                <button class="category-badge px-5 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium shadow-sm hover:shadow-md" data-category="tutorial">
+                    Tutorials
+                </button>
+                <button class="category-badge px-5 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium shadow-sm hover:shadow-md" data-category="devops">
+                    DevOps
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Posts Grid -->
+    <section class="py-20 animate-fadein">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="blogGrid">
+                
+                <!-- Blog Post 1 -->
+                <article class="blog-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md" data-category="laravel tutorial">
+                    <div class="h-48 bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center">
+                        <i class="fab fa-laravel text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 text-xs rounded-full">Laravel</span>
+                            <span class="text-sm text-gray-500">5 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer">
+                            Building RESTful APIs with Laravel 11
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                            Learn how to create robust and scalable REST APIs using Laravel's latest features and best practices.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">August 15, 2025</span>
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline text-sm">Read More →</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Blog Post 2 -->
+                <article class="blog-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md" data-category="javascript">
+                    <div class="h-48 bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center">
+                        <i class="fab fa-js-square text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 text-xs rounded-full">JavaScript</span>
+                            <span class="text-sm text-gray-500">8 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer">
+                            Modern JavaScript ES6+ Features You Should Know
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                            Explore the latest JavaScript features that will make your code cleaner and more efficient.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Sep 10, 2025</span>
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline text-sm">Read More →</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Blog Post 3 -->
+                <article class="blog-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md" data-category="devops">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                        <i class="fas fa-server text-6xl text-white"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 text-xs rounded-full">DevOps</span>
+                            <span class="text-sm text-gray-500">6 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer">
+                            Deploying Laravel Apps to Production
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-400 mb-4 text-sm">
+                            A comprehensive guide to deploying Laravel applications with best practices for security and performance.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Oct 5, 2025</span>
+                            <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline text-sm">Read More →</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-4">Subscribe to My Newsletter</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-8">
+                    Get the latest articles and tutorials delivered directly to your inbox
+                </p>
+                <form class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <input type="email" placeholder="Enter your email" class="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 flex-1 max-w-md focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                    <button type="submit" class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition shadow-md">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-100 dark:bg-gray-900 text-center">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://github.com/olamzyweb" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="https://x.com/olamzyweb" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                   <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="17" width="17" xmlns="http://www.w3.org/2000/svg"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"></path></svg>
+       
+                </a>
+                <a href="https://www.linkedin.com/in/website-developer-website-design-create-website-olanrewaju-olamide-olamzyweb/" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
+            </div>
+            <p class="text-gray-600 dark:text-gray-400">© 2025 Olanrewaju Olamide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script/script.js">
+    </script>
+</body>
+</html>

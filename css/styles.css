@@ -1,0 +1,140 @@
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .section {
+            opacity: 1;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        .typing-container {
+            display: inline-block;
+        }
+        
+        .typing-text {
+            overflow: hidden;
+            border-right: 2px solid #0ea5e9;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #0ea5e9 }
+        }
+        
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .skill-bar {
+            width: 0;
+            transition: width 2s ease;
+        }
+        
+        .dark-mode .skill-bar {
+            transition: width 2s ease;
+        }
+        
+        /* Add fade/slide-in animation for service cards */
+        .service-card.visible {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        .animate-fadein {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1);
+        }
+        
+        .animate-fadein.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+
+  .scrolling-wrapper {
+      display: flex;
+      gap: 1.5rem;
+      animation: scroll 40s linear infinite;
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .scroll-container {
+      overflow: hidden;
+      white-space: nowrap;
+      display: flex;
+    }
+.skill-card {
+    flex: 0 0 auto;
+    width: 180px;
+  }
+
+ 
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+nav {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+nav:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(-50%) scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
