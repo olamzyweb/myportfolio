@@ -6,7 +6,7 @@
                         if (rect.top < window.innerHeight - 60) {
                             setTimeout(() => {
                                 card.classList.add('visible');
-                            }, idx * 120);
+                            }, idx * 20);
                         }
                     });
                 }
