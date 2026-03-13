@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arike, this is for you</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #07070c;
+        overflow-x: hidden;
+      }
+
+      .script-font {
+        font-family: Georgia, "Times New Roman", serif;
+        font-style: italic;
+      }
+
+      .glow-orb {
+        position: absolute;
+        border-radius: 9999px;
+        filter: blur(90px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .shine {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .shine::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-140%);
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.16), transparent);
+        transition: transform 1.2s ease;
+      }
+
+      .shine:hover::after {
+        transform: translateX(140%);
+      }
+
+      .floaty {
+        animation: floaty 6s ease-in-out infinite;
+      }
+
+      .floaty-delay {
+        animation: floaty 7.5s ease-in-out infinite;
+      }
+
+      .pulse-soft {
+        animation: pulseSoft 3.5s ease-in-out infinite;
+      }
+
+      .fade-up {
+        animation: fadeUp 0.9s ease both;
+      }
+
+      @keyframes floaty {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+      }
+
+      @keyframes pulseSoft {
+        0%, 100% { transform: scale(1); opacity: 0.72; }
+        50% { transform: scale(1.06); opacity: 1; }
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body class="text-white">
+    <div class="relative min-h-screen overflow-hidden">
+      <div class="glow-orb bg-fuchsia-500 w-72 h-72 top-10 -left-16"></div>
+      <div class="glow-orb bg-purple-500 w-96 h-96 top-32 right-0"></div>
+      <div class="glow-orb bg-cyan-400 w-72 h-72 bottom-10 left-1/3"></div>
+
+      <header class="relative z-10 px-6 py-6 md:px-12 lg:px-20">
+        <nav class="mx-auto flex max-w-6xl items-center justify-between rounded-full glass px-5 py-3">
+          <div class="text-sm uppercase tracking-[0.35em] text-white/70">Arike</div>
+          <button id="secretBtn" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 transition hover:bg-white/10">
+            tap me
+          </button>
+        </nav>
+      </header>
+
+      <main class="relative z-10 px-6 pb-16 md:px-12 lg:px-20">
+        <section class="mx-auto grid min-h-[82vh] max-w-6xl items-center gap-12 lg:grid-cols-2">
+          <div class="fade-up">
+            <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-pink-400/20 bg-pink-400/10 px-4 py-2 text-xs uppercase tracking-[0.3em] text-pink-200">
+              <span class="h-2 w-2 rounded-full bg-pink-300 pulse-soft"></span>
+              made with intention
+            </p>
+
+            <h1 class="max-w-3xl text-5xl font-black leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
+              For the girl who
+              <span class="script-font bg-gradient-to-r from-pink-300 via-fuchsia-300 to-violet-300 bg-clip-text text-transparent">already feels like a scene</span>
+            </h1>
+
+            <p class="mt-6 max-w-xl text-lg leading-8 text-white/70 md:text-xl">
+              This is not supposed to feel like a website. It is supposed to feel like a pause, a smile, and that small moment when someone realizes they were being thought about properly.
+            </p>
+
+            <div class="mt-10 flex flex-wrap gap-4">
+              <a href="#moments" class="shine rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]">
+                keep going
+              </a>
+              <button id="complimentBtn" class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white/90 transition hover:bg-white/10">
+                one more thing
+              </button>
+            </div>
+
+            <p id="complimentText" class="mt-6 max-w-lg text-sm leading-7 text-fuchsia-200/0 transition duration-500">
+              Some people are easy to notice. You feel impossible not to.
+            </p>
+          </div>
+
+          <div class="relative fade-up" style="animation-delay: 0.15s;">
+            <div class="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-fuchsia-500/20 via-violet-500/10 to-cyan-400/20 blur-3xl"></div>
+
+            <div class="relative glass rounded-[2rem] p-5 shadow-2xl shadow-fuchsia-950/30">
+              <div class="mb-4 flex items-center gap-2">
+                <span class="h-3 w-3 rounded-full bg-rose-400"></span>
+                <span class="h-3 w-3 rounded-full bg-amber-400"></span>
+                <span class="h-3 w-3 rounded-full bg-emerald-400"></span>
+              </div>
+
+              <div class="rounded-[1.5rem] bg-[#0d1020]/90 p-6 border border-white/10">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p class="text-sm text-white/45">tonight's mood</p>
+                    <h2 class="text-2xl font-bold">soft, pretty, unforgettable</h2>
+                  </div>
+                  <div class="rounded-full border border-fuchsia-400/20 bg-fuchsia-400/10 px-3 py-1 text-xs font-medium text-fuchsia-200">
+                    only for you
+                  </div>
+                </div>
+
+                <div class="mt-6 space-y-4">
+                  <div class="floaty rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p class="text-xs uppercase tracking-[0.28em] text-cyan-200/70">first impression</p>
+                    <p class="mt-2 text-sm leading-7 text-white/80">Elegant without forcing it. The kind of presence that makes the whole room feel more styled.</p>
+                  </div>
+
+                  <div class="floaty-delay rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <p class="text-xs uppercase tracking-[0.28em] text-pink-200/70">energy</p>
+                    <p class="mt-2 text-sm leading-7 text-white/80">The kind that makes someone pause, smile, and immediately want a second look.</p>
+                  </div>
+
+                  <div class="rounded-2xl border border-white/10 bg-gradient-to-r from-pink-500/15 to-violet-500/15 p-5">
+                    <p class="text-sm text-white/55">small confession</p>
+                    <p class="mt-2 text-base leading-7 text-white/90">Normal compliments felt too ordinary, so I made something that feels a little more like you.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="moments" class="mx-auto max-w-6xl py-8">
+          <div class="grid gap-6 md:grid-cols-3">
+            <div class="glass rounded-[1.75rem] p-6">
+              <div class="mb-4 h-28 rounded-[1.25rem] bg-gradient-to-br from-pink-400/30 via-fuchsia-400/10 to-transparent"></div>
+              <h3 class="text-xl font-semibold">soft</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">The kind of beauty that does not need noise to be noticed.</p>
+            </div>
+
+            <div class="glass rounded-[1.75rem] p-6">
+              <div class="mb-4 h-28 rounded-[1.25rem] bg-gradient-to-br from-violet-400/30 via-indigo-400/10 to-transparent"></div>
+              <h3 class="text-xl font-semibold">stylish</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">Clean, composed, and impossible to mistake for average.</p>
+            </div>
+
+            <div class="glass rounded-[1.75rem] p-6">
+              <div class="mb-4 h-28 rounded-[1.25rem] bg-gradient-to-br from-cyan-400/30 via-sky-400/10 to-transparent"></div>
+              <h3 class="text-xl font-semibold">special</h3>
+              <p class="mt-3 text-sm leading-7 text-white/70">Because some people deserve something that feels thought through.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="mx-auto max-w-4xl py-8">
+          <div class="glass rounded-[2rem] px-6 py-8 text-center md:px-10">
+            <p class="text-sm uppercase tracking-[0.32em] text-white/45">final note</p>
+            <h2 class="script-font mt-4 text-4xl text-white md:text-5xl">If this made you smile even a little, then it already did its job.</h2>
+            <p class="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/65 md:text-base">
+              I just wanted to make something simple and beautiful enough to match the name at the top of the page.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const complimentBtn = document.getElementById('complimentBtn');
+      const complimentText = document.getElementById('complimentText');
+      const secretBtn = document.getElementById('secretBtn');
+
+      const lines = [
+        'Some people are easy to notice. You feel impossible not to.',
+        'You have the kind of presence that makes details matter.',
+        'This page is soft on purpose. So is the thought behind it.',
+        'If elegance was a person, this would be where I looked first.'
+      ];
+
+      let index = 0;
+
+      complimentBtn.addEventListener('click', () => {
+        index = (index + 1) % lines.length;
+        complimentText.textContent = lines[index];
+        complimentText.classList.remove('text-fuchsia-200/0');
+        complimentText.classList.add('text-fuchsia-200/100');
+      });
+
+      secretBtn.addEventListener('click', () => {
+        document.body.classList.toggle('bg-[#05050a]');
+        alert('For the girl who made ordinary feel too basic.');
+      });
+    </script>
+  </body>
+</html>
