@@ -1,3 +1,9 @@
+(() => {
+    if (window.__portfolioScriptInitialized) {
+        return;
+    }
+    window.__portfolioScriptInitialized = true;
+
     // Animate service cards on scroll
             document.addEventListener('DOMContentLoaded', function () {
                 function animateServiceCards() {
@@ -27,10 +33,12 @@
     }
 
     // Add click event listener to toggle theme
-themeToggle.addEventListener('click', () => {
-    htmlElement.classList.toggle('dark');
-    localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
-});
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.setItem('theme', htmlElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+    }
     
     // Scroll animations - unified approach
     function checkVisibility() {
@@ -138,3 +146,4 @@ themeToggle.addEventListener('click', () => {
             });
         });
     });
+})();
