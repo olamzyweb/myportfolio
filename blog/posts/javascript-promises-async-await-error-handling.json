@@ -1,0 +1,120 @@
+{
+  "id": "post-006",
+  "slug": "javascript-promises-async-await-error-handling",
+  "title": "Async/Await Error Handling in JavaScript: Stop Letting Errors Disappear",
+  "altTitle": "Your Async JavaScript Is Silently Failing - Here's How to Fix It",
+  "excerpt": "Learn practical patterns for handling errors in async/await JavaScript code so failures surface clearly, get logged properly, and never silently swallow exceptions.",
+  "category": "javascript",
+  "categoryLabel": "JavaScript",
+  "tags": ["javascript", "async", "error-handling", "promises", "nodejs"],
+  "publishedAt": "2025-04-18",
+  "readTime": "7 min read",
+  "seo": {
+    "title": "Async/Await Error Handling Patterns in JavaScript",
+    "description": "Practical patterns for robust async/await error handling in JavaScript - try/catch, Promise.allSettled, global handlers, and custom error classes with real examples."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "You have an async function that fetches data from an API. Something goes wrong - network timeout, 500 error, malformed JSON. Your app does nothing. No error message, no log, no fallback. The user stares at a spinner forever. This is the most common async mistake in JavaScript and it's completely avoidable."
+    },
+    {
+      "type": "paragraph",
+      "text": "This post covers the patterns you need to handle async errors properly: try/catch that actually catches what you think it catches, handling multiple parallel requests, and making sure nothing fails silently."
+    },
+    {
+      "type": "heading",
+      "text": "Why Async Errors Are Easy to Miss"
+    },
+    {
+      "type": "paragraph",
+      "text": "With synchronous code, an uncaught error crashes loudly. With async code, an unhandled Promise rejection used to disappear entirely in older Node versions, and in the browser it often just logs a warning you don't notice. Your app keeps running in a broken state."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "// This looks fine but errors vanish silently\nasync function loadUser(id) {\n  const res = await fetch(`/api/users/${id}`);\n  const user = await res.json();\n  return user;\n}\n\n// Called without catching - any error is swallowed\nloadUser(42);"
+    },
+    {
+      "type": "heading",
+      "text": "The Basic Pattern: try/catch in Async Functions"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "async function loadUser(id) {\n  try {\n    const res = await fetch(`/api/users/${id}`);\n\n    if (!res.ok) {\n      throw new Error(`HTTP ${res.status}: Failed to load user ${id}`);\n    }\n\n    return await res.json();\n  } catch (error) {\n    console.error('loadUser failed:', error.message);\n    // Return null or a fallback so callers can handle gracefully\n    return null;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "Two important things here: the explicit res.ok check (fetch doesn't throw on 4xx/5xx - it only throws on network failure) and returning null instead of letting the function resolve with undefined while an error is silently logged."
+    },
+    {
+      "type": "heading",
+      "text": "Handling Multiple Parallel Requests"
+    },
+    {
+      "type": "paragraph",
+      "text": "Promise.all is great for parallel requests but it fails fast - one rejection cancels everything. If you need all results regardless of individual failures, use Promise.allSettled:"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "async function loadDashboard(userId) {\n  const [ordersResult, profileResult, notificationsResult] = await Promise.allSettled([\n    fetch(`/api/users/${userId}/orders`).then(r => r.json()),\n    fetch(`/api/users/${userId}/profile`).then(r => r.json()),\n    fetch(`/api/users/${userId}/notifications`).then(r => r.json()),\n  ]);\n\n  return {\n    orders:        ordersResult.status === 'fulfilled' ? ordersResult.value : [],\n    profile:       profileResult.status === 'fulfilled' ? profileResult.value : null,\n    notifications: notificationsResult.status === 'fulfilled' ? notificationsResult.value : [],\n  };\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "Now if notifications fail, orders and profile still load. The dashboard renders with partial data rather than a blank screen."
+    },
+    {
+      "type": "heading",
+      "text": "Custom Error Classes for Cleaner Handling"
+    },
+    {
+      "type": "paragraph",
+      "text": "When you have different error types - network errors, validation errors, auth errors - a custom error class lets callers react differently to each:"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "class ApiError extends Error {\n  constructor(message, status) {\n    super(message);\n    this.name = 'ApiError';\n    this.status = status;\n  }\n}\n\nasync function apiFetch(url) {\n  const res = await fetch(url);\n\n  if (res.status === 401) throw new ApiError('Unauthorized', 401);\n  if (res.status === 404) throw new ApiError('Not found', 404);\n  if (!res.ok)            throw new ApiError(`Server error`, res.status);\n\n  return res.json();\n}\n\n// Caller can now branch on error type\ntry {\n  const user = await apiFetch('/api/me');\n} catch (err) {\n  if (err instanceof ApiError && err.status === 401) {\n    redirectToLogin();\n  } else {\n    showGenericError(err.message);\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Global Unhandled Rejection Handler"
+    },
+    {
+      "type": "paragraph",
+      "text": "Even with careful error handling, something will slip through. Set a global safety net:"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "// Browser\nwindow.addEventListener('unhandledrejection', (event) => {\n  console.error('Unhandled promise rejection:', event.reason);\n  // Send to your error tracker\n  Sentry.captureException(event.reason);\n});\n\n// Node.js\nprocess.on('unhandledRejection', (reason, promise) => {\n  console.error('Unhandled Rejection at:', promise, 'reason:', reason);\n  process.exit(1); // fail loudly in production\n});"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Checking res.ok is skipped - fetch resolves for any HTTP response including 400 and 500. You must check res.ok or res.status yourself.",
+        "Catching errors but not returning a value - if your catch block logs and exits without returning, the caller gets undefined and the bug is just delayed.",
+        "Using Promise.all when you need Promise.allSettled - one failing request silently kills the whole batch with Promise.all. Default to allSettled for independent parallel requests.",
+        "Wrapping await calls in try/catch but forgetting the outer async function is itself a Promise - if the async function throws before the try block, the caller still needs to catch it."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Silent failures are worse than loud ones. A crash you can see is a crash you can fix. An error that swallows itself leaves your app in a broken state you don't know about until a user complains."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: audit one async function in your codebase today - ideally a fetch call. Add the res.ok check, wrap it in try/catch, and make sure errors surface somewhere visible. Then set the global unhandledRejection handler if you haven't already."
+    }
+  ]
+}

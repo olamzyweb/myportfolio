@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post - Olanrewaju Olamide</title>
+    <meta name="description" content="Blog article by Olanrewaju Olamide">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50:  '#f9fafb',
+                            100: '#f1f2f3',
+                            200: '#d1d5db',
+                            300: '#9ca3af',
+                            400: '#6b7280',
+                            500: '#4b5563',
+                            600: '#1e293b',
+                            700: '#111827',
+                            800: '#0b0f17',
+                            900: '#05070b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white/10 dark:bg-gray-800/30 backdrop-blur-xl border border-white/20 shadow-lg rounded-2xl px-6 py-3 flex items-center justify-between space-x-6 z-50">
+        <a href="index.html" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110" aria-label="Back to blog home">
+            <i class="fas fa-arrow-left text-xl"></i>
+        </a>
+        <a href="../index.html" class="text-gray-900 dark:text-white/80 hover:text-primary-600 dark:hover:text-white transition transform hover:scale-110" aria-label="Go to portfolio">
+            <i class="fas fa-home text-xl"></i>
+        </a>
+        <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700/40 text-gray-900 dark:text-white hover:scale-110 transition" aria-label="Toggle theme">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+        </button>
+        <a href="index.html" class="px-4 py-1 bg-black hover:bg-gray-600 text-white rounded-full text-sm font-medium shadow-md transition">
+            Blog
+        </a>
+    </nav>
+
+    <main class="pt-28 pb-16">
+        <article class="max-w-4xl mx-auto px-4" id="postContainer">
+            <p class="text-center text-gray-500 dark:text-gray-400" id="postStatus">Loading post...</p>
+        </article>
+    </main>
+
+    <footer class="py-10 bg-gray-100 dark:bg-gray-900 text-center">
+        <div class="container mx-auto px-4">
+            <p class="text-gray-600 dark:text-gray-400">© 2026 Olanrewaju Olamide. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script/post.js"></script>
+</body>
+</html>

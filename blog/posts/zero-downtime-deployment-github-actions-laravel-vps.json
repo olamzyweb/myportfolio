@@ -1,0 +1,139 @@
+{
+  "id": "post-004",
+  "slug": "zero-downtime-deployment-github-actions-laravel-vps",
+  "title": "Zero-Downtime Laravel Deployments With GitHub Actions on a Single VPS",
+  "altTitle": "How to Deploy Laravel Without Taking Your App Offline",
+  "excerpt": "Set up a zero-downtime deployment pipeline using GitHub Actions, SSH, and symlink-based releases so your Laravel app stays live through every deploy.",
+  "category": "devops",
+  "categoryLabel": "DevOps",
+  "tags": ["devops", "github-actions", "laravel", "deployment", "vps"],
+  "publishedAt": "2025-04-18",
+  "readTime": "9 min read",
+  "seo": {
+    "title": "Zero-Downtime Laravel Deploy With GitHub Actions",
+    "description": "Learn how to deploy Laravel to a VPS with zero downtime using GitHub Actions, symlinked releases, and atomic directory swaps. Full workflow included."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "Most early-stage SaaS apps deploy like this: SSH in, git pull, run migrations, hope for the best. During those 20 seconds, Nginx is serving a half-updated app - old PHP files, new database schema, or the other way around. Users hit errors. You refresh and it's fine. You tell yourself it's acceptable."
+    },
+    {
+      "type": "paragraph",
+      "text": "It's not acceptable, and it's easy to fix. This post walks through a zero-downtime deployment strategy using GitHub Actions and a symlink-based release structure - the same approach Deployer and Envoyer use, but with no extra tools."
+    },
+    {
+      "type": "heading",
+      "text": "How Zero-Downtime Deployments Work"
+    },
+    {
+      "type": "paragraph",
+      "text": "The trick is atomic symlinks. Your web server points at /var/www/app/current. That symlink points to one of your releases - timestamped directories like /var/www/app/releases/20250418120000. When you deploy, you build the new release in a separate directory, run all setup steps, then flip the symlink in one atomic operation. Old release was serving users, new release takes over instantly. No gap."
+    },
+    {
+      "type": "heading",
+      "text": "VPS Directory Structure"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "/var/www/app/\n├── current -> releases/20250418120000   # symlink, Nginx points here\n├── releases/\n│   ├── 20250418110000/                  # previous release (kept for rollback)\n│   └── 20250418120000/                  # current live release\n└── shared/\n    ├── .env                             # shared across all releases\n    └── storage/                         # shared uploads and logs"
+    },
+    {
+      "type": "paragraph",
+      "text": "The shared directory holds anything that persists between deployments - your .env file and storage directory. Each release gets symlinks into shared/ rather than its own copies."
+    },
+    {
+      "type": "heading",
+      "text": "The Deployment Script"
+    },
+    {
+      "type": "paragraph",
+      "text": "Create a deploy.sh script in your repo at scripts/deploy.sh:"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "#!/bin/bash\nset -e\n\nAPP_DIR=\"/var/www/app\"\nRELEASE=\"$APP_DIR/releases/$(date +%Y%m%d%H%M%S)\"\nSHARED=\"$APP_DIR/shared\"\n\necho \"==> Creating release directory: $RELEASE\"\nmkdir -p \"$RELEASE\"\n\necho \"==> Cloning latest code\"\ngit clone --depth=1 git@github.com:your-org/your-repo.git \"$RELEASE\"\n\necho \"==> Linking shared files\"\nrm -rf \"$RELEASE/storage\"\nln -nfs \"$SHARED/storage\" \"$RELEASE/storage\"\nln -nfs \"$SHARED/.env\" \"$RELEASE/.env\"\n\necho \"==> Installing dependencies\"\ncd \"$RELEASE\" && composer install --no-dev --optimize-autoloader --quiet\n\necho \"==> Running migrations\"\nphp artisan migrate --force\n\necho \"==> Caching config and routes\"\nphp artisan config:cache\nphp artisan route:cache\nphp artisan view:cache\n\necho \"==> Switching symlink (atomic)\"\nln -nfs \"$RELEASE\" \"$APP_DIR/current\"\n\necho \"==> Restarting queue workers\"\nphp artisan queue:restart\n\necho \"==> Cleaning up old releases (keep last 3)\"\nls -dt \"$APP_DIR/releases/\"* | tail -n +4 | xargs rm -rf\n\necho \"==> Deploy complete!\""
+    },
+    {
+      "type": "heading",
+      "text": "The GitHub Actions Workflow"
+    },
+    {
+      "type": "paragraph",
+      "text": "Create .github/workflows/deploy.yml in your repo:"
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "text": "name: Deploy to Production\n\non:\n  push:\n    branches:\n      - main\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v4\n\n      - name: Set up SSH\n        uses: webfactory/ssh-agent@v0.9.0\n        with:\n          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}\n\n      - name: Add server to known hosts\n        run: ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts\n\n      - name: Run deployment script on server\n        run: |\n          ssh deploy@${{ secrets.SERVER_IP }} 'bash /var/www/app/scripts/deploy.sh'"
+    },
+    {
+      "type": "heading",
+      "text": "Setting Up GitHub Secrets"
+    },
+    {
+      "type": "paragraph",
+      "text": "In your GitHub repo, go to Settings -> Secrets and Variables -> Actions and add:"
+    },
+    {
+      "type": "list",
+      "items": [
+        "DEPLOY_SSH_KEY - the private half of an SSH key pair. Add the public key to ~/.ssh/authorized_keys on your server for the deploy user.",
+        "SERVER_IP - your VPS IP address or hostname."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Nginx Config"
+    },
+    {
+      "type": "paragraph",
+      "text": "Point Nginx at the current symlink, not a specific release:"
+    },
+    {
+      "type": "code",
+      "language": "nginx",
+      "text": "server {\n    listen 80;\n    server_name yourdomain.com;\n    root /var/www/app/current/public;\n\n    add_header X-Frame-Options \"SAMEORIGIN\";\n    index index.php;\n\n    location / {\n        try_files $uri $uri/ /index.php?$query_string;\n    }\n\n    location ~ \\.php$ {\n        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;\n        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n        include fastcgi_params;\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Rolling Back"
+    },
+    {
+      "type": "paragraph",
+      "text": "If a deploy goes wrong, rollback is a one-liner:"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "# Point current at the previous release\nln -nfs /var/www/app/releases/20250418110000 /var/www/app/current\nphp artisan queue:restart"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Running migrations before the symlink swap with a breaking schema change - if your migration removes a column the old code needs, users on the old release will see errors during the swap window. Run additive migrations first, remove columns in a follow-up deploy.",
+        "Not setting set -e in the deploy script - without it, the script continues past failures and can flip a broken release into production.",
+        "Forgetting queue:restart - queue workers hold the old code in memory. Without a restart signal, they keep processing jobs with stale code after the deploy.",
+        "Leaving too many old releases - they eat disk space fast on a VPS. The cleanup step at the end of the script keeps only the last 3."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Zero-downtime deployment on a single VPS is not complex infrastructure - it's a 60-line bash script and a GitHub Actions workflow. Once it's in place, pushing to main is genuinely stress-free. The symlink swap is atomic. Rollback is instant. Old releases are your safety net."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: set up the directory structure on your VPS today and do a test deploy manually before wiring up GitHub Actions. Understanding the script by running it yourself makes the automation much less scary."
+    }
+  ]
+}

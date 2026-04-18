@@ -1,0 +1,134 @@
+{
+  "id": "post-007",
+  "slug": "build-crud-rest-api-laravel-sanctum-tutorial",
+  "title": "Build a CRUD REST API in Laravel With Sanctum Authentication",
+  "altTitle": "Laravel API From Scratch: Auth, Resources, and Clean JSON in 60 Minutes",
+  "excerpt": "Build a fully authenticated CRUD REST API in Laravel using Sanctum for token auth, API Resources for clean JSON, and proper validation on every endpoint.",
+  "category": "tutorial",
+  "categoryLabel": "Tutorial",
+  "tags": ["laravel", "api", "sanctum", "tutorial", "rest"],
+  "publishedAt": "2025-04-18",
+  "readTime": "10 min read",
+  "seo": {
+    "title": "Build a Laravel CRUD API With Sanctum Auth",
+    "description": "Step-by-step tutorial to build a REST API in Laravel with Sanctum token authentication, API Resources, FormRequest validation, and clean JSON responses."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "If you've built Laravel apps with Blade views, making the jump to a pure API backend feels like starting over. The routing is the same, the models are the same, but suddenly you're thinking about tokens, JSON responses, and what to return when validation fails. This tutorial walks through the whole thing from scratch - authentication, CRUD, validation, and clean output."
+    },
+    {
+      "type": "paragraph",
+      "text": "We'll build a simple Product API: create, read, update, delete - protected by Sanctum token auth. By the end you'll have a template you can reuse for any resource."
+    },
+    {
+      "type": "heading",
+      "text": "Step 1: Install Sanctum"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "composer require laravel/sanctum\nphp artisan vendor:publish --provider=\"Laravel\\Sanctum\\SanctumServiceProvider\"\nphp artisan migrate"
+    },
+    {
+      "type": "paragraph",
+      "text": "Then add the HasApiTokens trait to your User model:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "use Laravel\\Sanctum\\HasApiTokens;\n\nclass User extends Authenticatable\n{\n    use HasApiTokens, HasFactory, Notifiable;\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Step 2: Auth Endpoints - Register and Login"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// routes/api.php\nRoute::post('/register', [AuthController::class, 'register']);\nRoute::post('/login',    [AuthController::class, 'login']);\n\nRoute::middleware('auth:sanctum')->group(function () {\n    Route::post('/logout', [AuthController::class, 'logout']);\n    Route::apiResource('products', ProductController::class);\n});"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// app/Http/Controllers/AuthController.php\npublic function register(Request $request): JsonResponse\n{\n    $data = $request->validate([\n        'name'     => 'required|string|max:255',\n        'email'    => 'required|email|unique:users',\n        'password' => 'required|string|min:8|confirmed',\n    ]);\n\n    $user  = User::create([\n        ...$data,\n        'password' => bcrypt($data['password']),\n    ]);\n    $token = $user->createToken('api-token')->plainTextToken;\n\n    return response()->json(['token' => $token], 201);\n}\n\npublic function login(Request $request): JsonResponse\n{\n    $credentials = $request->validate([\n        'email'    => 'required|email',\n        'password' => 'required|string',\n    ]);\n\n    if (!Auth::attempt($credentials)) {\n        return response()->json(['message' => 'Invalid credentials'], 401);\n    }\n\n    $token = Auth::user()->createToken('api-token')->plainTextToken;\n    return response()->json(['token' => $token]);\n}\n\npublic function logout(Request $request): JsonResponse\n{\n    $request->user()->currentAccessToken()->delete();\n    return response()->json(['message' => 'Logged out']);\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Step 3: The Product Model and Migration"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "php artisan make:model Product -m"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// database/migrations/xxxx_create_products_table.php\nSchema::create('products', function (Blueprint $table) {\n    $table->id();\n    $table->foreignId('user_id')->constrained()->cascadeOnDelete();\n    $table->string('name');\n    $table->text('description')->nullable();\n    $table->decimal('price', 10, 2);\n    $table->integer('stock')->default(0);\n    $table->timestamps();\n});"
+    },
+    {
+      "type": "heading",
+      "text": "Step 4: Form Request Validation"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "php artisan make:request StoreProductRequest\nphp artisan make:request UpdateProductRequest"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// app/Http/Requests/StoreProductRequest.php\npublic function rules(): array\n{\n    return [\n        'name'        => 'required|string|max:255',\n        'description' => 'nullable|string',\n        'price'       => 'required|numeric|min:0',\n        'stock'       => 'required|integer|min:0',\n    ];\n}\n\npublic function authorize(): bool { return true; }"
+    },
+    {
+      "type": "heading",
+      "text": "Step 5: API Resource for Clean Output"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "php artisan make:resource ProductResource"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// app/Http/Resources/ProductResource.php\npublic function toArray(Request $request): array\n{\n    return [\n        'id'          => $this->id,\n        'name'        => $this->name,\n        'description' => $this->description,\n        'price'       => number_format($this->price, 2),\n        'stock'       => $this->stock,\n        'created_at'  => $this->created_at->toDateTimeString(),\n    ];\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Step 6: The Product Controller"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "class ProductController extends Controller\n{\n    public function index(Request $request): JsonResponse\n    {\n        $products = $request->user()->products()->latest()->paginate(15);\n        return ProductResource::collection($products)->response();\n    }\n\n    public function store(StoreProductRequest $request): JsonResponse\n    {\n        $product = $request->user()->products()->create($request->validated());\n        return (new ProductResource($product))->response()->setStatusCode(201);\n    }\n\n    public function show(Request $request, Product $product): JsonResponse\n    {\n        $this->authorize('view', $product);\n        return (new ProductResource($product))->response();\n    }\n\n    public function update(UpdateProductRequest $request, Product $product): JsonResponse\n    {\n        $this->authorize('update', $product);\n        $product->update($request->validated());\n        return (new ProductResource($product))->response();\n    }\n\n    public function destroy(Request $request, Product $product): JsonResponse\n    {\n        $this->authorize('delete', $product);\n        $product->delete();\n        return response()->json(null, 204);\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Returning $product directly instead of through an API Resource - Eloquent's toArray exposes every column including internal fields. Always shape your output with a Resource class.",
+        "Not scoping queries to the authenticated user - without $request->user()->products(), any user can read any product. Always scope to the owner.",
+        "Skipping authorisation on show/update/destroy - just because a user is authenticated doesn't mean they own the resource. Use Policies or a manual ownership check.",
+        "Returning 200 for resource creation - use 201 Created for store and 204 No Content for destroy. Clients that check status codes will thank you."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "A clean Laravel API isn't complicated - it's just a consistent set of patterns applied to every resource: FormRequest for validation, API Resource for output shaping, Sanctum for auth, and proper status codes throughout."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: use this as a template for your next resource. Scaffold the model, migration, FormRequest, Resource, and Controller in one go with php artisan make:model Invoice -mcr --requests --resource and fill in the blanks."
+    }
+  ]
+}

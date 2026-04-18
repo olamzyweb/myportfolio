@@ -1,0 +1,130 @@
+{
+  "id": "post-002",
+  "slug": "debounce-vs-throttle-javascript-when-to-use-each",
+  "title": "Debounce vs Throttle in JavaScript: When to Use Each (With Real Examples)",
+  "altTitle": "Your Search Input Is Killing Your API - Fix It With Debounce",
+  "excerpt": "Debounce and throttle are two tools that control how often a function runs. Learn the difference, when each applies, and how to build both from scratch.",
+  "category": "javascript",
+  "categoryLabel": "JavaScript",
+  "tags": ["javascript", "performance", "debounce", "throttle", "frontend"],
+  "publishedAt": "2025-04-18",
+  "readTime": "6 min read",
+  "seo": {
+    "title": "Debounce vs Throttle in JavaScript Explained",
+    "description": "Understand the difference between debounce and throttle in JavaScript, when to use each, and how to implement them from scratch with practical examples."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "You build a search input. Every keystroke fires an API call. The user types 'laravel tutorial' - that's 16 keystrokes, 16 API requests, almost all of them wasted. Your backend groans. Your bill goes up. The user notices nothing. This is a fixable problem, and the fix is called debouncing."
+    },
+    {
+      "type": "paragraph",
+      "text": "Throttle is its cousin - useful in different situations. Most developers reach for one when they need the other, or just grab lodash without really knowing what's happening under the hood. This post explains both clearly, shows you when to use each, and walks through building them from scratch."
+    },
+    {
+      "type": "heading",
+      "text": "The Core Difference"
+    },
+    {
+      "type": "paragraph",
+      "text": "Debounce delays execution until a function stops being called for a specified time. If you keep calling it, it keeps resetting the timer. The function only runs once things go quiet."
+    },
+    {
+      "type": "paragraph",
+      "text": "Throttle limits execution to once every N milliseconds, no matter how often it's called. Even if you hammer it a hundred times, it fires at a steady rate."
+    },
+    {
+      "type": "list",
+      "items": [
+        "Debounce: search inputs, form validation, window resize handlers where you only care about the final state",
+        "Throttle: scroll events, mouse move tracking, real-time charts, rate-limited API polling"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Building Debounce From Scratch"
+    },
+    {
+      "type": "paragraph",
+      "text": "The idea: every call clears the previous timer and sets a new one. The wrapped function only fires when the timer completes without interruption."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "function debounce(fn, delay) {\n  let timer;\n\n  return function (...args) {\n    clearTimeout(timer);\n    timer = setTimeout(() => {\n      fn.apply(this, args);\n    }, delay);\n  };\n}\n\n// Usage\nconst handleSearch = debounce((query) => {\n  console.log('Searching for:', query);\n  fetchResults(query);\n}, 400);\n\ndocument.getElementById('search').addEventListener('input', (e) => {\n  handleSearch(e.target.value);\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": "With a 400ms delay, the API only gets called after the user pauses typing for 400ms. Sixteen keystrokes become one request. That's the win."
+    },
+    {
+      "type": "heading",
+      "text": "Building Throttle From Scratch"
+    },
+    {
+      "type": "paragraph",
+      "text": "Throttle uses a flag to track whether it's within a cooldown period. If it is, the call is ignored. If not, the function runs and the cooldown starts."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "function throttle(fn, limit) {\n  let inThrottle = false;\n\n  return function (...args) {\n    if (inThrottle) return;\n\n    fn.apply(this, args);\n    inThrottle = true;\n\n    setTimeout(() => {\n      inThrottle = false;\n    }, limit);\n  };\n}\n\n// Usage: track scroll position without hammering the DOM\nconst handleScroll = throttle(() => {\n  const scrollY = window.scrollY;\n  updateProgressBar(scrollY);\n}, 100);\n\nwindow.addEventListener('scroll', handleScroll);"
+    },
+    {
+      "type": "paragraph",
+      "text": "This runs updateProgressBar at most once every 100ms, even if scroll fires hundreds of times per second. Smooth and efficient."
+    },
+    {
+      "type": "heading",
+      "text": "A Practical Side-by-Side"
+    },
+    {
+      "type": "paragraph",
+      "text": "Say a user is resizing the browser window. You want to recompute a layout. With debounce, you wait until they stop resizing and compute once. With throttle, you compute every 200ms while they resize. Which is right? Depends - if the recalculation is expensive and the final size is what matters, debounce. If you want a live-feeling update as they drag, throttle."
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "// Debounce: recalculate only after user stops resizing\nwindow.addEventListener('resize', debounce(() => {\n  recalculateLayout();\n}, 300));\n\n// Throttle: update every 200ms while resizing (live preview)\nwindow.addEventListener('resize', throttle(() => {\n  updateLivePreview();\n}, 200));"
+    },
+    {
+      "type": "heading",
+      "text": "Adding a Leading Edge to Debounce"
+    },
+    {
+      "type": "paragraph",
+      "text": "Sometimes you want the function to fire immediately on the first call, then go quiet until the burst is over. This is called leading-edge debounce and it feels more responsive for button clicks:"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "function debounceLeading(fn, delay) {\n  let timer;\n\n  return function (...args) {\n    const shouldFire = !timer;\n    clearTimeout(timer);\n\n    timer = setTimeout(() => {\n      timer = null;\n    }, delay);\n\n    if (shouldFire) {\n      fn.apply(this, args);\n    }\n  };\n}\n\n// Prevents accidental double-submits on a form button\nconst submitOrder = debounceLeading(() => {\n  placeOrder();\n}, 1000);"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Creating a new debounce/throttle wrapper inside a render function - this resets the timer every render, breaking the whole thing. Always create the wrapped function once, outside the render cycle.",
+        "Using debounce where you need throttle on scroll - debounce on scroll means your handler never fires while the user is actively scrolling, only after they stop.",
+        "Picking a delay that's too short - 50ms debounce on a search input barely helps. 300-500ms is where it actually reduces API calls meaningfully.",
+        "Not cancelling on unmount in React - if the component unmounts before the debounce fires, you'll get state updates on an unmounted component. Clear the timer in useEffect cleanup."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Debounce and throttle are small functions with a big impact. They're not just performance tricks - they're about building interfaces that behave sensibly under real user behavior."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: open your codebase right now and search for addEventListener('input') or addEventListener('scroll'). If those handlers are firing raw without debounce or throttle, fix them today. It's a 5-minute change with an immediate payoff."
+    }
+  ]
+}

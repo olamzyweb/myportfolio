@@ -1,0 +1,113 @@
+{
+  "id": "post-008",
+  "slug": "docker-laravel-local-dev-environment-setup",
+  "title": "Dockerise Your Laravel App for Local Development (The Right Way)",
+  "altTitle": "Ditch XAMPP: Set Up Laravel With Docker in 20 Minutes",
+  "excerpt": "Set up a consistent Laravel local development environment with Docker Compose - PHP-FPM, Nginx, MySQL, and Redis - so every dev on your team runs the same stack.",
+  "category": "devops",
+  "categoryLabel": "DevOps",
+  "tags": ["docker", "laravel", "devops", "local-dev", "nginx"],
+  "publishedAt": "2025-04-18",
+  "readTime": "8 min read",
+  "seo": {
+    "title": "Docker Local Dev Setup for Laravel Apps",
+    "description": "How to set up a Laravel local development environment with Docker Compose, PHP-FPM, Nginx, MySQL, and Redis - fully reproducible across your whole team."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "It works on my machine is a joke until it's your bug. A new developer joins the team, spends half a day wrestling with PHP versions, MySQL config, and missing extensions, then still can't run the test suite. Docker solves this. Everyone runs the same environment, defined in code, spun up in one command."
+    },
+    {
+      "type": "paragraph",
+      "text": "This post sets up a proper Laravel dev environment with Docker Compose: PHP 8.2-FPM, Nginx, MySQL 8, and Redis. No Valet, no XAMPP, no homestead. Just containers."
+    },
+    {
+      "type": "heading",
+      "text": "The File Structure"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "your-laravel-app/\n├── docker/\n│   ├── nginx/\n│   │   └── default.conf\n│   └── php/\n│       └── Dockerfile\n├── docker-compose.yml\n└── ... (your Laravel app files)"
+    },
+    {
+      "type": "heading",
+      "text": "Step 1: The PHP Dockerfile"
+    },
+    {
+      "type": "code",
+      "language": "dockerfile",
+      "text": "# docker/php/Dockerfile\nFROM php:8.2-fpm\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    git curl zip unzip libpng-dev libonig-dev \\\n    libxml2-dev libzip-dev && \\\n    docker-php-ext-install pdo_mysql mbstring zip exif bcmath gd\n\n# Install Redis extension\nRUN pecl install redis && docker-php-ext-enable redis\n\n# Install Composer\nCOPY --from=composer:2 /usr/bin/composer /usr/bin/composer\n\nWORKDIR /var/www/html\n\nRUN groupmod -g 1000 www-data && usermod -u 1000 www-data\n\nUSER www-data"
+    },
+    {
+      "type": "heading",
+      "text": "Step 2: The Nginx Config"
+    },
+    {
+      "type": "code",
+      "language": "nginx",
+      "text": "# docker/nginx/default.conf\nserver {\n    listen 80;\n    server_name localhost;\n    root /var/www/html/public;\n    index index.php;\n\n    location / {\n        try_files $uri $uri/ /index.php?$query_string;\n    }\n\n    location ~ \\.php$ {\n        fastcgi_pass php:9000;\n        fastcgi_index index.php;\n        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n        include fastcgi_params;\n    }\n\n    location ~ /\\.ht {\n        deny all;\n    }\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Step 3: The Docker Compose File"
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "text": "# docker-compose.yml\nservices:\n\n  php:\n    build:\n      context: .\n      dockerfile: docker/php/Dockerfile\n    volumes:\n      - .:/var/www/html\n    depends_on:\n      - mysql\n      - redis\n    networks:\n      - app\n\n  nginx:\n    image: nginx:alpine\n    ports:\n      - \"8080:80\"\n    volumes:\n      - .:/var/www/html\n      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf\n    depends_on:\n      - php\n    networks:\n      - app\n\n  mysql:\n    image: mysql:8.0\n    environment:\n      MYSQL_DATABASE:      laravel\n      MYSQL_USER:          laravel\n      MYSQL_PASSWORD:      secret\n      MYSQL_ROOT_PASSWORD: rootsecret\n    volumes:\n      - mysql_data:/var/lib/mysql\n    ports:\n      - \"3306:3306\"\n    networks:\n      - app\n\n  redis:\n    image: redis:7-alpine\n    ports:\n      - \"6379:6379\"\n    networks:\n      - app\n\nnetworks:\n  app:\n    driver: bridge\n\nvolumes:\n  mysql_data:"
+    },
+    {
+      "type": "heading",
+      "text": "Step 4: Your .env Settings"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "DB_CONNECTION=mysql\nDB_HOST=mysql\nDB_PORT=3306\nDB_DATABASE=laravel\nDB_USERNAME=laravel\nDB_PASSWORD=secret\n\nREDIS_HOST=redis\nREDIS_PORT=6379\n\nQUEUE_CONNECTION=redis\nCACHE_DRIVER=redis\nSESSION_DRIVER=redis"
+    },
+    {
+      "type": "paragraph",
+      "text": "The host values mysql and redis match the service names in docker-compose.yml - that's how Docker's internal DNS resolves them."
+    },
+    {
+      "type": "heading",
+      "text": "Step 5: First Run"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "# Build and start all containers\ndocker compose up -d --build\n\n# Install PHP dependencies\ndocker compose exec php composer install\n\n# Run migrations\ndocker compose exec php php artisan migrate --seed\n\n# Generate app key\ndocker compose exec php php artisan key:generate"
+    },
+    {
+      "type": "paragraph",
+      "text": "Visit http://localhost:8080 and your Laravel app is running. Every artisan command runs through docker compose exec php - make an alias like alias art='docker compose exec php php artisan' and it feels native."
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Using root as the PHP container user - running as root means generated files (cache, logs, storage) are owned by root on your host machine. The Dockerfile sets www-data with UID 1000 to match your host user.",
+        "Mounting the whole project into multiple containers - both nginx and php need access to the project files. Mount the same volume into both services.",
+        "Forgetting to add .env to .gitignore and committing real credentials - use .env.example with placeholder values and let each developer copy and fill it.",
+        "Not persisting MySQL data with a named volume - without mysql_data, every docker compose down destroys your database. The named volume keeps it between restarts."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "A Dockerised dev environment is a one-time investment that pays dividends every time someone new joins the project or you switch machines. The setup in this post runs Laravel, MySQL, Redis, and Nginx consistently across macOS, Linux, and Windows."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: add this docker-compose.yml to your current Laravel project today and test that it boots cleanly. Then commit it. The next time someone onboards, their setup time goes from half a day to 20 minutes."
+    }
+  ]
+}

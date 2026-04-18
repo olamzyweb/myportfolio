@@ -120,6 +120,90 @@
             }
         });
     }
+
+    function initWorkExperienceTimeline() {
+        const section = document.getElementById('work-experience');
+        if (!section) {
+            return;
+        }
+
+        const draw = section.querySelector('.timeline-draw');
+        const items = Array.from(section.querySelectorAll('.timeline-item'));
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!items.length) {
+            return;
+        }
+
+        if (prefersReducedMotion) {
+            items.forEach((item, idx) => {
+                item.classList.add('is-visible');
+                if (idx === 0) {
+                    item.classList.add('is-active');
+                }
+            });
+            if (draw) {
+                draw.style.transform = 'scaleY(1)';
+            }
+            return;
+        }
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = items.indexOf(entry.target);
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                    }, Math.max(0, index) * 90);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.28 });
+
+        items.forEach(item => revealObserver.observe(item));
+
+        function updateTimelineProgress() {
+            const rect = section.getBoundingClientRect();
+            const start = window.innerHeight * 0.2;
+            const total = rect.height + window.innerHeight * 0.5;
+            const raw = (start - rect.top) / total;
+            const progress = Math.max(0, Math.min(1, raw));
+
+            if (draw) {
+                draw.style.transform = `scaleY(${progress})`;
+            }
+        }
+
+        function updateActiveItem() {
+            const focusY = window.innerHeight * 0.42;
+            let closest = null;
+            let closestDistance = Number.POSITIVE_INFINITY;
+
+            items.forEach(item => {
+                const itemRect = item.getBoundingClientRect();
+                const itemCenter = itemRect.top + itemRect.height / 2;
+                const distance = Math.abs(itemCenter - focusY);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closest = item;
+                }
+            });
+
+            items.forEach(item => item.classList.remove('is-active'));
+            if (closest) {
+                closest.classList.add('is-active');
+            }
+        }
+
+        function updateTimelineState() {
+            updateTimelineProgress();
+            updateActiveItem();
+        }
+
+        updateTimelineState();
+        window.addEventListener('scroll', updateTimelineState, { passive: true });
+        window.addEventListener('resize', updateTimelineState);
+    }
     
     // Initialize everything when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
@@ -127,6 +211,7 @@
         initParticles();
         initTypingEffect();
         animateServiceCards();
+        initWorkExperienceTimeline();
         
         // Add scroll listener
         window.addEventListener('scroll', () => {

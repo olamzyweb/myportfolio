@@ -1,0 +1,176 @@
+{
+  "id": "post-001",
+  "slug": "queuing-emails-in-laravel-with-mailables-and-queues",
+  "title": "Queuing Emails in Laravel: Mailables, Queues, and Retries Done Right",
+  "altTitle": "Stop Sending Emails Synchronously in Laravel - Here's the Fix",
+  "excerpt": "Learn how to offload transactional emails to Laravel Queues using Mailables, so your app stays fast and emails keep flowing even when things break.",
+  "category": "laravel",
+  "categoryLabel": "Laravel",
+  "tags": ["laravel", "queues", "email", "mailables", "php"],
+  "publishedAt": "2025-04-18",
+  "readTime": "7 min read",
+  "seo": {
+    "title": "Queuing Emails in Laravel with Mailables & Queues",
+    "description": "Learn to set up queued transactional email in Laravel using Mailables, Redis queues, failed job handling, and retry logic - with real code examples."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "Every time a user signs up, resets their password, or places an order, your app sends an email. If that email is sent synchronously - right there in the request cycle - your user waits. Your server blocks. And if the mail server hiccups, the whole request fails. There's a better way."
+    },
+    {
+      "type": "paragraph",
+      "text": "Laravel's queue system lets you push email jobs into the background so the user gets an instant response while the email processes on its own. This post walks you through setting it up end to end - Mailable class, queue config, dispatching, retry logic, and the common traps that catch people out."
+    },
+    {
+      "type": "heading",
+      "text": "How Laravel Queues and Mailables Work Together"
+    },
+    {
+      "type": "paragraph",
+      "text": "A Mailable is a PHP class that represents an email. It holds the template, subject, and data. When you implement the ShouldQueue interface on it, Laravel automatically serializes it and pushes it onto your configured queue instead of sending it immediately. A queue worker running in the background picks it up and sends it."
+    },
+    {
+      "type": "paragraph",
+      "text": "The queue can be backed by Redis, a database table, Amazon SQS, or even just the filesystem for local dev. For production, Redis is the most common choice - fast, reliable, and easy to monitor."
+    },
+    {
+      "type": "heading",
+      "text": "Step 1: Create Your Mailable"
+    },
+    {
+      "type": "paragraph",
+      "text": "Run the artisan command to scaffold a Mailable class:"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "php artisan make:mail OrderConfirmed --markdown=emails.orders.confirmed"
+    },
+    {
+      "type": "paragraph",
+      "text": "Now open the generated class and implement ShouldQueue:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "<?php\n\nnamespace App\\Mail;\n\nuse App\\Models\\Order;\nuse Illuminate\\Bus\\Queueable;\nuse Illuminate\\Contracts\\Queue\\ShouldQueue;\nuse Illuminate\\Mail\\Mailable;\nuse Illuminate\\Mail\\Mailables\\Content;\nuse Illuminate\\Mail\\Mailables\\Envelope;\nuse Illuminate\\Queue\\SerializesModels;\n\nclass OrderConfirmed extends Mailable implements ShouldQueue\n{\n    use Queueable, SerializesModels;\n\n    public function __construct(public Order $order) {}\n\n    public function envelope(): Envelope\n    {\n        return new Envelope(subject: 'Your Order is Confirmed');\n    }\n\n    public function content(): Content\n    {\n        return new Content(markdown: 'emails.orders.confirmed');\n    }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "The SerializesModels trait handles serializing your Eloquent model to just its ID, then rehydrating it when the job runs. This keeps the queue payload small and safe."
+    },
+    {
+      "type": "heading",
+      "text": "Step 2: Configure Your Queue Driver"
+    },
+    {
+      "type": "paragraph",
+      "text": "In your .env file, set your queue connection. For Redis:"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "QUEUE_CONNECTION=redis\nREDIS_HOST=127.0.0.1\nREDIS_PORT=6379"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you don't have Redis set up yet and want to test quickly, use the database driver - just run php artisan queue:table && php artisan migrate first."
+    },
+    {
+      "type": "heading",
+      "text": "Step 3: Dispatch the Email"
+    },
+    {
+      "type": "paragraph",
+      "text": "In your controller or service, dispatch the Mailable like this:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "use App\\Mail\\OrderConfirmed;\nuse Illuminate\\Support\\Facades\\Mail;\n\n// In your OrderController or OrderService\nMail::to($order->user->email)->queue(new OrderConfirmed($order));\n\n// Or dispatch with a delay\nMail::to($order->user->email)\n    ->later(now()->addMinutes(5), new OrderConfirmed($order));"
+    },
+    {
+      "type": "paragraph",
+      "text": "The request returns immediately. The email goes into the queue. The worker handles the rest."
+    },
+    {
+      "type": "heading",
+      "text": "Step 4: Set Up Retry Logic"
+    },
+    {
+      "type": "paragraph",
+      "text": "Transient mail server failures happen. You want automatic retries. Add these properties to your Mailable class:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "class OrderConfirmed extends Mailable implements ShouldQueue\n{\n    use Queueable, SerializesModels;\n\n    // Retry up to 3 times\n    public int $tries = 3;\n\n    // Wait 60 seconds before retrying\n    public int $backoff = 60;\n\n    // Fail the job after 5 minutes total\n    public int $timeout = 300;\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Step 5: Run Your Queue Worker"
+    },
+    {
+      "type": "paragraph",
+      "text": "Start the worker locally with:"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "text": "php artisan queue:work --tries=3 --sleep=3"
+    },
+    {
+      "type": "paragraph",
+      "text": "In production, use Supervisor to keep the worker alive. Create a config file at /etc/supervisor/conf.d/laravel-worker.conf:"
+    },
+    {
+      "type": "code",
+      "language": "ini",
+      "text": "[program:laravel-worker]\nprocess_name=%(program_name)s_%(process_num)02d\ncommand=php /var/www/html/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600\nautostart=true\nautorestart=true\nuser=www-data\nnumprocs=2\nredirect_stderr=true\nstdout_logfile=/var/www/html/storage/logs/worker.log"
+    },
+    {
+      "type": "heading",
+      "text": "Handling Failed Jobs"
+    },
+    {
+      "type": "paragraph",
+      "text": "When all retries are exhausted, Laravel stores the failed job in the failed_jobs table (run php artisan queue:failed-table && php artisan migrate to create it). You can inspect failures with php artisan queue:failed and retry them with php artisan queue:retry {id}."
+    },
+    {
+      "type": "paragraph",
+      "text": "For critical emails, add a failed() method to your Mailable to notify yourself when something permanently breaks:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "public function failed(\\Throwable $exception): void\n{\n    // Notify your team via Slack, log to Sentry, etc.\n    \\Log::critical('OrderConfirmed email failed permanently', [\n        'order_id' => $this->order->id,\n        'error' => $exception->getMessage(),\n    ]);\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes to Avoid"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Not running queue:restart after deploying - old workers run stale code. Always restart workers after each deploy.",
+        "Storing large objects in the Mailable constructor - only pass what you need. Let SerializesModels handle Eloquent models.",
+        "Using the sync driver in production - sync runs jobs inline and kills the whole point of queuing. Set QUEUE_CONNECTION=redis or database in production.",
+        "No Supervisor setup - without it, your queue worker dies and nobody notices until emails stop flowing.",
+        "Forgetting to create the failed_jobs table - failed jobs silently disappear without it."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Queued emails are not a premature optimization - they're the right default for any app that sends transactional email. The setup takes maybe 30 minutes and it pays back immediately in faster responses, better reliability, and proper failure visibility."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: pick one email your app sends synchronously today - welcome email, password reset, order confirmation - and migrate it to a queued Mailable this week. Once you see how clean it is, you'll queue everything."
+    }
+  ]
+}

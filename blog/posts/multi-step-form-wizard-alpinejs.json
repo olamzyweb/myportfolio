@@ -1,0 +1,114 @@
+{
+  "id": "post-003",
+  "slug": "multi-step-form-wizard-alpinejs",
+  "title": "Build a Multi-Step Form Wizard With Alpine.js - No Backend Needed",
+  "altTitle": "Multi-Step Forms in Alpine.js: State, Validation, and Clean UX in 80 Lines",
+  "excerpt": "Build a clean multi-step form wizard using Alpine.js with per-step validation, progress tracking, and smooth transitions - all in the browser, no framework needed.",
+  "category": "tutorial",
+  "categoryLabel": "Tutorial",
+  "tags": ["alpinejs", "javascript", "forms", "tutorial", "frontend"],
+  "publishedAt": "2025-04-18",
+  "readTime": "8 min read",
+  "seo": {
+    "title": "Multi-Step Form Wizard With Alpine.js Tutorial",
+    "description": "Step-by-step guide to building a multi-step form wizard in Alpine.js with validation, state management, and progress indicator - no backend or build tools needed."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "Multi-step forms get better completion rates than long single-page forms. They reduce cognitive load, feel more conversational, and let you validate inputs before the user moves on. The problem is most tutorials reach for React or Vue and bring in 50kb of framework for what's really a state machine with three steps."
+    },
+    {
+      "type": "paragraph",
+      "text": "Alpine.js handles this beautifully with zero build tools. You drop one script tag in your HTML and you're done. This tutorial builds a real 3-step wizard - personal info, preferences, confirmation - with per-step validation and a progress bar."
+    },
+    {
+      "type": "heading",
+      "text": "What We're Building"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Step 1: Name and email input with basic validation",
+        "Step 2: Preference selection (plan type, newsletter opt-in)",
+        "Step 3: Review and confirm screen",
+        "Progress bar showing current step",
+        "Next/Back navigation that blocks on invalid input"
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "The HTML Structure"
+    },
+    {
+      "type": "paragraph",
+      "text": "Alpine.js state lives in an x-data attribute on a parent element. All child elements share that state. Here's the outer shell:"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "text": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Sign Up</title>\n  <script defer src=\"https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js\"></script>\n</head>\n<body>\n  <div x-data=\"wizard()\" class=\"form-wrapper\">\n\n    <!-- Progress Bar -->\n    <div class=\"progress\">\n      <div class=\"bar\" :style=\"'width: ' + (step / totalSteps * 100) + '%'\"></div>\n    </div>\n    <p>Step <span x-text=\"step\"></span> of <span x-text=\"totalSteps\"></span></p>\n\n    <!-- Steps rendered here -->\n\n  </div>\n</body>\n</html>"
+    },
+    {
+      "type": "heading",
+      "text": "Step 1: Personal Info"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "text": "<div x-show=\"step === 1\">\n  <h2>Your Details</h2>\n\n  <input\n    type=\"text\"\n    placeholder=\"Full Name\"\n    x-model=\"form.name\"\n    :class=\"{ 'error': errors.name }\"\n  />\n  <span x-show=\"errors.name\" x-text=\"errors.name\" class=\"error-msg\"></span>\n\n  <input\n    type=\"email\"\n    placeholder=\"Email Address\"\n    x-model=\"form.email\"\n    :class=\"{ 'error': errors.email }\"\n  />\n  <span x-show=\"errors.email\" x-text=\"errors.email\" class=\"error-msg\"></span>\n\n  <button @click=\"nextStep()\">Next &rarr;</button>\n</div>"
+    },
+    {
+      "type": "heading",
+      "text": "Step 2: Preferences"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "text": "<div x-show=\"step === 2\">\n  <h2>Your Preferences</h2>\n\n  <label>\n    <input type=\"radio\" x-model=\"form.plan\" value=\"free\"> Free Plan\n  </label>\n  <label>\n    <input type=\"radio\" x-model=\"form.plan\" value=\"pro\"> Pro Plan\n  </label>\n  <span x-show=\"errors.plan\" x-text=\"errors.plan\" class=\"error-msg\"></span>\n\n  <label>\n    <input type=\"checkbox\" x-model=\"form.newsletter\"> Subscribe to newsletter\n  </label>\n\n  <button @click=\"prevStep()\">&larr; Back</button>\n  <button @click=\"nextStep()\">Next &rarr;</button>\n</div>"
+    },
+    {
+      "type": "heading",
+      "text": "Step 3: Confirm"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "text": "<div x-show=\"step === 3\">\n  <h2>Confirm Your Details</h2>\n  <p>Name: <strong x-text=\"form.name\"></strong></p>\n  <p>Email: <strong x-text=\"form.email\"></strong></p>\n  <p>Plan: <strong x-text=\"form.plan\"></strong></p>\n  <p>Newsletter: <strong x-text=\"form.newsletter ? 'Yes' : 'No'\"></strong></p>\n\n  <button @click=\"prevStep()\">&larr; Back</button>\n  <button @click=\"submit()\">Confirm &amp; Submit</button>\n</div>"
+    },
+    {
+      "type": "heading",
+      "text": "The Alpine.js Component Logic"
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "text": "function wizard() {\n  return {\n    step: 1,\n    totalSteps: 3,\n    form: {\n      name: '',\n      email: '',\n      plan: '',\n      newsletter: false,\n    },\n    errors: {},\n\n    validate() {\n      this.errors = {};\n\n      if (this.step === 1) {\n        if (!this.form.name.trim()) {\n          this.errors.name = 'Name is required.';\n        }\n        if (!this.form.email.match(/^[^@]+@[^@]+\\.[^@]+$/)) {\n          this.errors.email = 'Enter a valid email address.';\n        }\n      }\n\n      if (this.step === 2) {\n        if (!this.form.plan) {\n          this.errors.plan = 'Please select a plan.';\n        }\n      }\n\n      return Object.keys(this.errors).length === 0;\n    },\n\n    nextStep() {\n      if (this.validate()) {\n        this.step++;\n      }\n    },\n\n    prevStep() {\n      if (this.step > 1) this.step--;\n    },\n\n    submit() {\n      // Send form.data to your backend here\n      console.log('Submitting:', this.form);\n      alert('Registration complete!');\n    },\n  };\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Hiding steps with CSS display:none manually instead of x-show - Alpine's x-show handles reactivity. Don't fight it with custom CSS toggling.",
+        "Validating all steps at once on the final submit - validate per step so errors surface where the user can fix them, not all at the end.",
+        "Not resetting errors when moving back - if you go back and fix something, old error messages should clear. The validate() function clears the errors object at the start, so call it or clear errors manually on prevStep.",
+        "Forgetting x-cloak - without it, users briefly see all steps before Alpine initialises. Add [x-cloak] { display: none } to your CSS."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Alpine.js is the right tool for UI patterns like this - enough reactivity to manage state and validation, small enough that you don't need a build pipeline. This wizard fits in a single HTML file, works in any Laravel Blade view, and can be extended with as many steps as you need."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: take a long single-page form in your current project and split it into 2-3 steps using this pattern. Measure completion rate before and after. The improvement is usually obvious."
+    }
+  ]
+}

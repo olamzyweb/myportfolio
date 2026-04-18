@@ -1,0 +1,136 @@
+{
+  "id": "post-005",
+  "slug": "laravel-rate-limiting-api-routes-throttle-middleware",
+  "title": "Rate Limiting API Routes in Laravel: Throttle Middleware and Custom Limiters",
+  "altTitle": "Stop API Abuse in Laravel Before It Costs You Money",
+  "excerpt": "Learn how to protect your Laravel API with built-in throttle middleware, custom rate limiters per user tier, and proper 429 error responses.",
+  "category": "laravel",
+  "categoryLabel": "Laravel",
+  "tags": ["laravel", "api", "rate-limiting", "middleware", "php"],
+  "publishedAt": "2025-04-18",
+  "readTime": "7 min read",
+  "seo": {
+    "title": "Laravel API Rate Limiting With Custom Limiters",
+    "description": "How to add rate limiting to Laravel API routes using throttle middleware, RateLimiter facade, and per-user tier limits - with real code examples."
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": "You launch an API. A few weeks later, one user is making 4,000 requests a minute - hammering your database, slowing everyone else down, and running up your server bill. You had no rate limiting. Now you do. This post shows you how to add it properly in Laravel before that happens to you."
+    },
+    {
+      "type": "paragraph",
+      "text": "Laravel ships with everything you need: a throttle middleware, a RateLimiter facade for custom rules, and clean 429 responses with Retry-After headers. Let's use all of it."
+    },
+    {
+      "type": "heading",
+      "text": "The Basics: Built-in Throttle Middleware"
+    },
+    {
+      "type": "paragraph",
+      "text": "The simplest way to add rate limiting is the throttle middleware on your route group. It accepts requests per minute and the number of minutes to block after the limit is hit:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// routes/api.php\nRoute::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {\n    Route::get('/products', [ProductController::class, 'index']);\n    Route::post('/orders', [OrderController::class, 'store']);\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": "This allows 60 requests per minute per user. After that, Laravel returns a 429 Too Many Requests response with a Retry-After header automatically. Simple and effective for most cases."
+    },
+    {
+      "type": "heading",
+      "text": "Custom Rate Limiters: Different Rules per User Tier"
+    },
+    {
+      "type": "paragraph",
+      "text": "Real applications need more nuance. A free user gets 60 requests per minute; a Pro subscriber gets 600. The RateLimiter facade in RouteServiceProvider handles this cleanly:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// app/Providers/RouteServiceProvider.php\nuse Illuminate\\Cache\\RateLimiting\\Limit;\nuse Illuminate\\Support\\Facades\\RateLimiter;\n\npublic function boot(): void\n{\n    RateLimiter::for('api', function (Request $request) {\n        $user = $request->user();\n\n        if (!$user) {\n            return Limit::perMinute(20)->by($request->ip());\n        }\n\n        return match($user->plan) {\n            'pro'        => Limit::perMinute(600)->by($user->id),\n            'business'   => Limit::none(),\n            default      => Limit::perMinute(60)->by($user->id),\n        };\n    });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "Now reference your named limiter in routes:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {\n    Route::apiResource('products', ProductController::class);\n});"
+    },
+    {
+      "type": "heading",
+      "text": "Applying Different Limits to Different Endpoints"
+    },
+    {
+      "type": "paragraph",
+      "text": "Some endpoints are more expensive than others. A search endpoint that queries Elasticsearch should have a tighter limit than a simple status check. Define multiple limiters:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "RateLimiter::for('search', function (Request $request) {\n    return Limit::perMinute(10)->by($request->user()?->id ?? $request->ip());\n});\n\nRateLimiter::for('exports', function (Request $request) {\n    return Limit::perHour(5)->by($request->user()?->id ?? $request->ip());\n});\n\n// In routes/api.php\nRoute::middleware('throttle:search')->get('/search', [SearchController::class, 'index']);\nRoute::middleware('throttle:exports')->get('/export', [ExportController::class, 'download']);"
+    },
+    {
+      "type": "heading",
+      "text": "Customising the 429 Response"
+    },
+    {
+      "type": "paragraph",
+      "text": "By default, Laravel returns an HTML 429 page which is useless for API clients. Override it in your exception handler to return JSON:"
+    },
+    {
+      "type": "code",
+      "language": "php",
+      "text": "// app/Exceptions/Handler.php\nuse Illuminate\\Http\\Exceptions\\ThrottleRequestsException;\n\npublic function render($request, Throwable $exception)\n{\n    if ($exception instanceof ThrottleRequestsException && $request->expectsJson()) {\n        return response()->json([\n            'error' => 'Too many requests. Please slow down.',\n            'retry_after' => $exception->getHeaders()['Retry-After'] ?? 60,\n        ], 429);\n    }\n\n    return parent::render($request, $exception);\n}"
+    },
+    {
+      "type": "heading",
+      "text": "Checking Rate Limit Status in Responses"
+    },
+    {
+      "type": "paragraph",
+      "text": "Good APIs tell clients how many requests they have left. Laravel adds these headers automatically when you use throttle middleware:"
+    },
+    {
+      "type": "list",
+      "items": [
+        "X-RateLimit-Limit - the maximum requests allowed in the window",
+        "X-RateLimit-Remaining - how many requests are left",
+        "Retry-After - seconds until the limit resets (only on 429 responses)"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Your API clients can read these headers and back off gracefully before hitting the wall."
+    },
+    {
+      "type": "heading",
+      "text": "Common Mistakes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Using throttle:60,1 globally on all routes including webhooks - Stripe and other webhook providers will get rate-limited and stop retrying. Exclude webhook routes from throttle middleware.",
+        "Rate limiting by IP alone for authenticated routes - one corporate office or shared NAT could share an IP across dozens of users. Always key authenticated limits by user ID.",
+        "Not testing rate limit behaviour - set the limit to 3 in your local .env, hit it in Postman, and verify the 429 response looks right before deploying.",
+        "Forgetting that throttle state is stored in cache - if you're using the file driver in production, rate limit counters don't share across multiple servers. Use Redis."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Final Takeaway"
+    },
+    {
+      "type": "paragraph",
+      "text": "Rate limiting is one of those things that takes 30 minutes to set up and saves you from a very bad afternoon when someone scripts against your API. Laravel makes it almost frictionless."
+    },
+    {
+      "type": "paragraph",
+      "text": "Action step: open your api.php routes file right now. If you don't see throttle middleware on your route groups, add it today. Start with the defaults - you can tune the numbers once you see real traffic patterns."
+    }
+  ]
+}
